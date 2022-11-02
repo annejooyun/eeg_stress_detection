@@ -5,6 +5,7 @@ import pandas as pd
 
 DIR_RAW = 'Data/raw_data'
 DIR_FILTERED = 'Data/filtered_data'
+DIR_ICA_FILTERED = 'Data/ica_filtered_data'
 
 LABELS_PATH = 'Data/scales.xls'
 
@@ -48,6 +49,24 @@ def load_dataset(raw=True, test_type="Arithmetic"):
         counter += 1
     return dataset
 
+
+def load_ica_dataset(test_type="Arithmetic"):
+    dir = DIR_ICA_FILTERED
+    data_key = 'Clean_data'
+
+    dataset = np.empty((120, 32, 3200))
+
+    counter = 0
+    for filename in os.listdir(dir):
+        if test_type not in filename:
+            continue
+
+        f = os.path.join(dir, filename)
+        data = scipy.io.loadmat(f)[data_key]
+        data = np.reshape(data,(32,3200))
+        dataset[counter] = data
+        counter += 1
+    return dataset
 
 def load_labels():
     labels = pd.read_excel(LABELS_PATH)
