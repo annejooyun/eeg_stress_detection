@@ -63,7 +63,6 @@ def load_ica_dataset(test_type="Arithmetic"):
 
         f = os.path.join(dir, filename)
         data = scipy.io.loadmat(f)[data_key]
-        data = np.reshape(data,(32,3200))
         dataset[counter] = data
         counter += 1
     return dataset
