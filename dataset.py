@@ -6,6 +6,7 @@ import pandas as pd
 DIR_RAW = 'Data/raw_data'
 DIR_FILTERED = 'Data/filtered_data'
 DIR_ICA_FILTERED = 'Data/ica_filtered_data'
+DIR_ICA_FILTERED_2 = 'Data/ica_filtered_data_2'
 
 LABELS_PATH = 'Data/scales.xls'
 
@@ -50,10 +51,14 @@ def load_dataset(raw=True, test_type="Arithmetic"):
     return dataset
 
 
-def load_ica_dataset(test_type="Arithmetic"):
-    dir = DIR_ICA_FILTERED
+def load_ica_dataset(test_type="Arithmetic",round=1):
+    if round == 1:
+        dir = DIR_ICA_FILTERED
+        
+    else:
+        dir = DIR_ICA_FILTERED_2
+        
     data_key = 'Clean_data'
-
     dataset = np.empty((120, 32, 3200))
 
     counter = 0
