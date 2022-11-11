@@ -89,8 +89,7 @@ def convert_to_epochs(dataset, channels, sfreq):
     '''
     Splits EEG data into epochs with length 1 sec
     '''
-    epoched_dataset = np.empty(
-        (dataset.shape[0], dataset.shape[2]//sfreq, channels, sfreq))
+    epoched_dataset = np.empty((dataset.shape[0], dataset.shape[2]//sfreq, channels, sfreq))
     for i in range(dataset.shape[0]):
         for j in range(dataset.shape[2]//sfreq):
             epoched_dataset[i, j] = dataset[i, :, j*sfreq:(j+1)*sfreq]
