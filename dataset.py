@@ -2,6 +2,7 @@ import scipy
 import os
 import numpy as np
 import pandas as pd
+import variables as v
 
 DIR_RAW = 'Data/raw_data'
 DIR_FILTERED = 'Data/filtered_data'
@@ -24,41 +25,37 @@ COLUMNS_TO_RENAME = {
 }
 
 
-def load_dataset(raw=True, test_type="Arithmetic"):
+def load_dataset(data_type="ica2", test_type="Arithmetic"):
     '''
     Loads data from the SAM 40 Dataset with the test specified by test_type.
-    The raw flag specifies whether to use the raw data or the filtered data.
+    The data_type parameter specifies which of the datasets to load. Possible values
+    are raw, filtered, ica_filtered.
     Returns a Numpy Array with shape (120, 32, 3200).
     '''
-    if raw:
-        dir = DIR_RAW
+    assert (test_type in v.TEST_TYPES)
+
+    assert (data_type in v.DATA_TYPES)
+
+    if data_type == "ica2" and test_type != "Arithmetic":
+        print("Data of type", data_type, "does not have test type", test_type)
+        return 0
+
+    if data_type == "raw":
+        dir = v.DIR_RAW
         data_key = 'Data'
-    else:
-        dir = DIR_FILTERED
+    elif data_type == "filtered":
+        dir = v.DIR_FILTERED
         data_key = 'Clean_data'
-
-    dataset = np.empty((120, 32, 3200))
-
-    counter = 0
-    for filename in os.listdir(dir):
-        if test_type not in filename:
-            continue
-
-        f = os.path.join(dir, filename)
-        data = scipy.io.loadmat(f)[data_key]
-        dataset[counter] = data
-        counter += 1
-    return dataset
-
-
-def load_ica_dataset(test_type="Arithmetic",round=1):
-    if round == 1:
-        dir = DIR_ICA_FILTERED
-        
+    elif data_type == "ica1":
+        dir = v.DIR_ICA_FILTERED
+        data_key = 'Clean_data'
+    elif data_type == "ica2":
+        dir = v.DIR_ICA_FILTERED_2
+        data_key = 'Clean_data'
     else:
-        dir = DIR_ICA_FILTERED_2
-        
-    data_key = 'Clean_data'
+        print("No files matching data type found")
+        return 0
+
     dataset = np.empty((120, 32, 3200))
 
     counter = 0
@@ -71,6 +68,7 @@ def load_ica_dataset(test_type="Arithmetic",round=1):
         dataset[counter] = data
         counter += 1
     return dataset
+
 
 def load_labels():
     '''
