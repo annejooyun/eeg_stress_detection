@@ -5,6 +5,10 @@ DIR_ICA_FILTERED_2 = 'Data/ica_filtered_data_2'
 
 LABELS_PATH = 'Data/scales.xls'
 
+NUM_CLASSES = 2
+NUM_CHANNELS = 32
+SFREQ = 128
+
 COLUMNS_TO_RENAME = {
     'Subject No.': 'subject_no',
     'Trial_1': 't1_math',

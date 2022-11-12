@@ -55,8 +55,8 @@ def load_labels():
     Loads labels from the dataset and transforms the label values to binary values.
     Values larger than 5 are set to 1 and values lower than or equal to 5 are set to zero.
     '''
-    labels = pd.read_excel(LABELS_PATH)
-    labels = labels.rename(columns=COLUMNS_TO_RENAME)
+    labels = pd.read_excel(v.LABELS_PATH)
+    labels = labels.rename(columns=v.COLUMNS_TO_RENAME)
     labels = labels[1:]
     labels = labels.astype("int")
     labels = labels > 5
