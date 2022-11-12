@@ -73,7 +73,7 @@ def convert_to_epochs(dataset, channels, sfreq):
             epoched_dataset[i, j] = dataset[i, :, j*sfreq:(j+1)*sfreq]
     return epoched_dataset
 
-def get_channels():
+def load_channels():
         root = 'Data'
         coordinates_file = os.path.join(root,"Coordinates.locs") 
 
