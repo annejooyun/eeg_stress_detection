@@ -15,9 +15,21 @@ def time_series_features(data, channels):
     for i, trial in enumerate(data):
         for j, second in enumerate(trial):
             mean = mne_features.univariate.compute_mean(second)
+            if True in np.isnan(mean):
+                print('mean is NAN')
+                print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
             variance = mne_features.univariate.compute_variance(second)
+            if True in np.isnan(variance):
+                print('variance is NAN')
+                print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
             skewness = mne_features.univariate.compute_skewness(second)
+            if True in np.isnan(skewness):
+                print('skewness is NAN')
+                print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
             rms = mne_features.univariate.compute_rms(second)
+            if True in np.isnan(rms):
+                print('rms is NAN')
+                print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
             stats = np.concatenate([mean, variance, skewness, rms])
             features[i][j] = stats
     features = features.reshape([features.shape[0]*features.shape[1], features.shape[2]])
