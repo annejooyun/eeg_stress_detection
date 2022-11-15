@@ -7,7 +7,8 @@ def time_series_features(data, channels):
     The data should be on the form (n_trials, n_secs, n_channels, sfreq)
     The output is on the form (n_trials*n_secs, n_channels*n_features)
     '''
-    stats_to_compute = 4
+    #stats_to_compute = 4
+    stats_to_compute = 3
     n_features = channels* stats_to_compute
     print(data.shape)
 
@@ -22,15 +23,16 @@ def time_series_features(data, channels):
             if True in np.isnan(variance):
                 print('variance is NAN')
                 print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
-            skewness = mne_features.univariate.compute_skewness(second)
-            if True in np.isnan(skewness):
-                print('skewness is NAN')
-                print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
+            #skewness = mne_features.univariate.compute_skewness(second)
+            #if True in np.isnan(skewness):
+            #    print('skewness is NAN')
+            #    print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
             rms = mne_features.univariate.compute_rms(second)
             if True in np.isnan(rms):
                 print('rms is NAN')
                 print(f' is {i}, trial is {trial}, j is {j}, second is {second}')
-            stats = np.concatenate([mean, variance, skewness, rms])
+            #stats = np.concatenate([mean, variance, skewness, rms])
+            stats = np.concatenate([mean, variance, rms])
             features[i][j] = stats
     features = features.reshape([features.shape[0]*features.shape[1], features.shape[2]])
     return features

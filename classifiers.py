@@ -36,6 +36,10 @@ def LR(data, label):
     scores_lr = lr_clf.score(x_test, y_test)
     compute_metrics(y_true, y_pred)
 
+
+
+
+
 def KNN(data, label):
     K.clear_session()
     x, x_test, y, y_test = train_test_split(data, label, test_size=0.2, random_state=1)
@@ -63,6 +67,14 @@ def KNN(data, label):
     compute_metrics(y_true, y_pred)
 
 
+
+
+
+
+
+
+
+
 def SVM(data, label):
     x, x_test, y, y_test = train_test_split(data, label, test_size=0.2, random_state=1)
     x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.25, random_state=1)
@@ -79,7 +91,14 @@ def SVM(data, label):
 
     y_pred = clf.predict(x_test)
     y_true = y_test
-    compute_metrics(y_true, y_pred)
+    return compute_metrics(y_true, y_pred)
+
+
+
+
+
+
+
 
 
 def NN(data, label):
