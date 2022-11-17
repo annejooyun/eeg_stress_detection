@@ -14,7 +14,7 @@ def compute_metrics(y_true, y_pred):
     FP = conf_matrix[0,1]
 
     # Accuracy = TP/ (TP + TN)
-    accuracy = TP/(TP+TN)
+    accuracy = (TP+TN)/(TP+TN+FN+FP)
 
     # Sensitivity = TP / (TP + FN)
     sensitivity = TP/(TP+FN)
