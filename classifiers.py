@@ -12,12 +12,11 @@ from keras import models
 from keras.layers import Dense
 import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
-from metrics import compute_metrics
 from sklearn.metrics import confusion_matrix, classification_report
-
 from keras_tuner.tuners import RandomSearch
 import keras_tuner
 
+from metrics import compute_metrics
 import variables as v
 
 
@@ -42,9 +41,10 @@ def LR(data, label):
 
 def KNN(data, label):
     K.clear_session()
+    print(data.shape)
     x, x_test, y, y_test = train_test_split(data, label, test_size=0.2, random_state=1)
     x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.25, random_state=1)
-    scaler = StandardScaler()
+    scaler = MinMaxScaler()
     scaler.fit(x_train)
     x = scaler.transform(x)
     x_train = scaler.transform(x_train)
@@ -64,7 +64,7 @@ def KNN(data, label):
     y_pred = knn_clf.predict(x_test)
     y_true = y_test
 
-    compute_metrics(y_true, y_pred)
+    return compute_metrics(y_true, y_pred)
 
 
 
@@ -76,24 +76,20 @@ def KNN(data, label):
 
 
 def SVM(data, label):
-    x, x_test, y, y_test = train_test_split(data, label, test_size=0.2, random_state=1)
-    x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.25, random_state=1)
-
-    param_grid = {
-        'C': [0.1, 1, 10, 100, 1000],
-        'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
-        'kernel': ['rbf']
-    }
-    split_index = [-1 if x in range(len(x_train)) else 0 for x in range(len(x))]
-    ps = PredefinedSplit(test_fold=split_index)
-    clf = GridSearchCV(SVC(), param_grid, cv=ps, refit=True)
-    clf.fit(x, y)
-
-    y_pred = clf.predict(x_test)
-    y_true = y_test
-    return compute_metrics(y_true, y_pred)
-
-
+   x, x_test, y, y_test = train_test_split(data, label, test_size=0.2, random_state=1)
+   x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.25, random_state=1)
+   param_grid = {
+    'C': [0.1, 1, 10, 100, 1000],
+    'kernel': ['rbf']
+   }
+   split_index = [-1 if x in range(len(x_train)) else 0 for x in range(len(x))]
+   ps = PredefinedSplit(test_fold=split_index)
+   svm_clf = GridSearchCV(SVC(), param_grid, cv=ps, refit=True)
+   svm_clf.fit(x, y)
+   y_pred = svm_clf.predict(x_test)
+   y_true = y_test
+   
+   return compute_metrics(y_true, y_pred)
 
 
 

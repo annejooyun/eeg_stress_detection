@@ -19,7 +19,7 @@ def time_series_features(data, n_channels):
             features[i][j] = np.concatenate([ptp_amp, variance, rms])
     features = features.reshape(
         [features.shape[0]*features.shape[1], features.shape[2]])
-    return 
+    return features
 
 def fractal_features(data, n_channels):
     '''
