@@ -87,7 +87,7 @@ def make_init_pop(all_data, all_genes, num_genes_in_person, num_people):
     subset_data = get_subset(all_data, all_genes, init_pop[0],)
     dataset = convert_to_epochs(subset_data, num_genes_in_person, v.SFREQ)
     label = create_labels(dataset)
-
+    
     return init_pop, label
 
 
@@ -121,9 +121,10 @@ def create_labels(dataset):
     label = label.repeat(dataset.shape[1])
     return label
 
+
 def convert_pop_to_fitness(all_data, all_channels, current_pop, label, n_genes):
     # Calculates population fitness (accuracy, sensitivity, specificity)
-    data = np.empty((len(current_pop), 3000, 16))
+    data = np.empty((3000, 16))
     new_pop_fitness = np.empty((len(current_pop),3))
 
     for i in range(len(current_pop)):
@@ -138,20 +139,19 @@ def convert_pop_to_fitness(all_data, all_channels, current_pop, label, n_genes):
 
     return new_pop_fitness
 
-def convert_parents_to_fitness(all_data, all_genes, current_pop,label, num_parents_mating, n_genes):
+def convert_parents_to_fitness(all_data, all_genes, parents, label, num_parents_mating, n_genes):
      # Calculates parents fitness (accuracy, sensitivity, specificity)
     new_pop_fitness = np.empty((num_parents_mating,3))
+    data = np.empty((3000, 16))
 
     for i in range(num_parents_mating):
-        data = np.empty((120, 3000, 24))
-
-        print(f'Parent genes: {current_pop[i]} ')
-
-        subset_data = get_subset(all_data, all_genes, current_pop[i])
+        
+        subset_data = get_subset(all_data, all_genes, parents[i])
         dataset = convert_to_epochs(subset_data, n_genes, v.SFREQ)
-        features = time_series_features(dataset, n_genes)
+        features = hjorth_features(dataset, n_genes,v.SFREQ)
         data = features
-        results = SVM(data, label)
+        print(f'Parent genes: {parents[i]} ')
+        results = KNN(data, label)
         print(results)
         new_pop_fitness[i] = results
 
