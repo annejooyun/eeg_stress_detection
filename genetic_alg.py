@@ -32,44 +32,47 @@ def select_mating_pool(pop, fitness, num_parents):
         fitness[max_fitness_idx] = -99999999999
     return parents
 
-def crossover(parents, offspring_size,num_genes_in_person):
+def crossover(parents, offspring_size):
     # Produces offspring with a random combination of the two parents' genes
+    n_offspring = offspring_size[0]
+    n_genes_in_person = int(offspring_size[1])
+
     offspring = np.empty(offspring_size, dtype='<U5')
     # The point at which crossover takes place between two parents. 
     # Usually it is at the center.
-    crossover_point = np.uint8(offspring_size[1]/2)
+    crossover_point = round(n_genes_in_person/2)
 
-    offspring_nr = 0
+    offspring_indx = 0
     for i in range(parents.shape[0]):
         for j in range(i+1, parents.shape[0]):
-            counter = 0
-            while counter < num_genes_in_person:
-                if counter < crossover_point:
-                    r_int = random.randint(0,7)
-                    if parents[i][r_int] not in offspring[offspring_nr]:
-                        offspring[offspring_nr][counter] = parents[i][r_int]
-                        counter += 1
+            gene_indx = 0
+            while gene_indx < n_genes_in_person:
+                if gene_indx < crossover_point:
+                    rand_int = random.randint(0,7)
+                    if parents[i][rand_int] not in offspring[offspring_indx]:
+                        offspring[offspring_indx][gene_indx] = parents[i][rand_int]
+                        gene_indx += 1
                 else:
-                    r_int = random.randint(0,7)
-                    if parents[j][r_int] not in offspring[offspring_nr]:
-                        offspring[offspring_nr][counter] = parents[j][r_int]
-                        counter += 1
-            offspring_nr += 1
+                    rand_int = random.randint(0,7)
+                    if parents[j][rand_int] not in offspring[offspring_indx]:
+                        offspring[offspring_indx][gene_indx] = parents[j][rand_int]
+                        gene_indx += 1
+            offspring_indx += 1
     return offspring
 
 
-def make_init_pop(all_genes, num_genes, num_people):
+def make_init_pop(all_data, all_genes, num_genes_in_person, num_people):
     # Makes a random first population
     # Initialize empty population
-    init_pop = np.empty([num_people,num_genes], dtype='<U5')
+    init_pop = np.empty([num_people,num_genes_in_person], dtype='<U5')
     person_index = 0
 
     while person_index!=num_people:
         # Initialize new person
-        person = np.empty(num_genes, dtype='<U5')
+        person = np.empty(num_genes_in_person, dtype='<U5')
         gene_index = 0
 
-        while gene_index!=num_genes:
+        while gene_index!=num_genes_in_person:
             # Gives a random index
             index = random.randint(0,len(all_genes)-1)
             # Checks if the gene is not already in the gene pool of the person
@@ -78,7 +81,14 @@ def make_init_pop(all_genes, num_genes, num_people):
                 gene_index += 1
         init_pop[person_index] = person
         person_index +=1
-    return init_pop
+
+    # Create labels to match the dataset
+    # Creating labels
+    subset_data = get_subset(all_data, all_genes, init_pop[0],)
+    dataset = convert_to_epochs(subset_data, num_genes_in_person, v.SFREQ)
+    label = create_labels(dataset)
+
+    return init_pop, label
 
 
 def get_subset(data, all_genes, subset_genes):
@@ -111,7 +121,7 @@ def create_labels(dataset):
     label = label.repeat(dataset.shape[1])
     return label
 
-def convert_pop_to_fitness(all_data, all_channels, current_pop,label,n_genes):
+def convert_pop_to_fitness(all_data, all_channels, current_pop, label, n_genes):
     # Calculates population fitness (accuracy, sensitivity, specificity)
     data = np.empty((len(current_pop), 3000, 16))
     new_pop_fitness = np.empty((len(current_pop),3))
