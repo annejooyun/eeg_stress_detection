@@ -20,25 +20,6 @@ from metrics import compute_metrics
 import variables as v
 
 
-def LR(data, label):
-    K.clear_session()
-    x_train, x_test, y_train, y_test = train_test_split(
-    data, label, test_size=0.33, random_state=42)
-    scaler = StandardScaler()
-    scaler.fit(x_train)
-    x_train = scaler.transform(x_train)
-    x_test = scaler.transform(x_test)
-    lr_clf = LogisticRegression(max_iter=1000).fit(x_train, y_train)
-    y_pred = lr_clf.predict(x_test)
-    y_true = y_test
-
-    scores_lr = lr_clf.score(x_test, y_test)
-    compute_metrics(y_true, y_pred)
-
-
-
-
-
 def KNN(data, label):
     K.clear_session()
     print(data.shape)
