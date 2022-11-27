@@ -84,7 +84,7 @@ def make_init_pop(all_data, all_genes, num_genes_in_person, num_people):
 
     # Create labels to match the dataset
     # Creating labels
-    subset_data = get_subset(all_data, all_genes, init_pop[0],)
+    subset_data = get_subset(all_data, all_genes, init_pop[0])
     dataset = convert_to_epochs(subset_data, num_genes_in_person, v.SFREQ)
     label = create_labels(dataset)
     
