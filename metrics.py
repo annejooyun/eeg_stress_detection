@@ -8,8 +8,8 @@ def compute_metrics(y_true, y_pred):
     print('\n Confusion matrix:')
     print(conf_matrix)
 
-    TP = conf_matrix[0,0]
-    TN = conf_matrix[1,1]
+    TN = conf_matrix[0,0]
+    TP = conf_matrix[1,1]
     FN = conf_matrix[1,0]
     FP = conf_matrix[0,1]
 
